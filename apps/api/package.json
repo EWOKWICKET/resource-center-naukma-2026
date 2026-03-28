@@ -1,0 +1,19 @@
+{
+  "name": "@resource-center/api",
+  "version": "1.0.0",
+  "scripts": {
+    "start:dev": "nodemon src/server.ts",
+    "build": "tsc -p tsconfig.json",
+    "lint": "eslint src/**/*.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "fastify": "^5.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.0",
+    "ts-node": "^10.9.2",
+    "vitest": "^3.0.0"
+  }
+}
