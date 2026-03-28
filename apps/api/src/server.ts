@@ -1,15 +1,18 @@
 import Fastify from 'fastify';
 import { buildApp } from './app';
 
-const start = async (): Promise<void> => {
-  const fastify = Fastify({ logger: true });
+const PORT = Number(process.env.PORT) || 3000;
+const HOST = '0.0.0.0';
 
-  await buildApp(fastify);
+const start = async (): Promise<void> => {
+  const app = Fastify({ logger: true });
+
+  await buildApp(app);
 
   try {
-    await fastify.listen({ port: 3000, host: '0.0.0.0' });
+    await app.listen({ port: PORT, host: HOST });
   } catch (err) {
-    fastify.log.error(err);
+    app.log.error(err);
     process.exit(1);
   }
 };
