@@ -1,19 +1,28 @@
 import { z } from 'zod';
+import { Genre } from '../enums/genre.enum';
+import { Language } from '../enums/language.enum';
+
+const genreValues = Object.values(Genre) as [string, ...string[]];
+const languageValues = Object.values(Language) as [string, ...string[]];
 
 export const bookInputSchema = z.object({
   title: z.string().min(1, 'Title is required'),
-  author: z.string().min(1, 'Author is required'),
+  authors: z.array(z.string().min(1)).min(1, 'At least one author is required'),
+  genres: z.array(z.enum(genreValues)).optional().default([]),
   description: z.string().optional(),
   isbn: z.string().optional(),
-  coverUrl: z.string().url('Must be a valid URL').optional().or(z.literal('')),
-  categoryId: z.string().optional(),
-  publishedYear: z.number().int().min(1000).max(2100).optional(),
+  publishedYear: z.number().int().min(1000).max(2200).optional(),
+  publisher: z.string().optional(),
+  language: z.enum(languageValues).optional(),
+  pageCount: z.number().int().positive().optional(),
 });
 
 export const booksQuerySchema = z.object({
   search: z.string().optional(),
-  categoryId: z.string().optional(),
-  // query params arrive as strings — coerce via enum+transform
+  genre: z
+    .enum(genreValues)
+    .transform((v) => v as Genre)
+    .optional(),
   isActive: z
     .enum(['true', 'false'])
     .transform((v) => v === 'true')

@@ -1,5 +1,5 @@
 node_modules/
 dist/
-*.md
+docs/
 !README.md
 .env

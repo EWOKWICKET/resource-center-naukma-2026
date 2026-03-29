@@ -1,2 +1,3 @@
+export * from './auth.schema';
 export * from './books.schema';
-export * from './categories.schema';
+export * from './users.schema';

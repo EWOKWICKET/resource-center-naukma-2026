@@ -1,23 +1,25 @@
 import { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
+import cookie from '@fastify/cookie';
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import mercurius from 'mercurius';
 import { db } from './plugins/db';
-import { booksController, categoriesController, sseController } from './controllers';
-import { schema, booksResolver, categoriesResolver, statsResolver } from './graphql';
+import { sessionPlugin } from './plugins/session';
+import { authController, booksController, sseController, usersController } from './controllers';
+import { schema, booksResolver, statsResolver } from './graphql';
 
 const resolvers = {
   Query: {
     ...booksResolver.Query,
-    ...categoriesResolver.Query,
     ...statsResolver.Query,
   },
-  Book: booksResolver.Book,
 };
 
 export const buildApp = async (app: FastifyInstance): Promise<void> => {
   await app.register(cors, { origin: true, credentials: true });
   await app.register(db);
+  await app.register(cookie);
+  await app.register(sessionPlugin);
 
   // GraphQL — registered before the Zod validator compiler so mercurius's own
   // JSON-Schema body validation is unaffected by Zod
@@ -38,8 +40,9 @@ export const buildApp = async (app: FastifyInstance): Promise<void> => {
       rest.setValidatorCompiler(validatorCompiler);
       rest.setSerializerCompiler(serializerCompiler);
 
+      await rest.register(authController, { prefix: '/auth' });
+      await rest.register(usersController, { prefix: '/users' });
       await rest.register(booksController, { prefix: '/books' });
-      await rest.register(categoriesController, { prefix: '/categories' });
     },
     { prefix: '/api' },
   );

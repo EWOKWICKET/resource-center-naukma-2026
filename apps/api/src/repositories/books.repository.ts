@@ -7,10 +7,10 @@ export const booksRepository = {
     const query: Record<string, unknown> = {};
 
     if (filters.isActive !== undefined) query.isActive = filters.isActive;
-    if (filters.categoryId) query.categoryId = filters.categoryId;
+    if (filters.genre) query.genres = filters.genre;
     if (filters.search) {
       const regex = new RegExp(filters.search, 'i');
-      query.$or = [{ title: regex }, { author: regex }];
+      query.$or = [{ title: regex }, { authors: regex }];
     }
 
     const docs = await BookModel.find(query).lean<BookDoc[]>();
@@ -18,10 +18,10 @@ export const booksRepository = {
     return docs.map(toBook);
   },
 
-  async findById(id: string): Promise<Book | undefined> {
+  async findById(id: string): Promise<Book | null> {
     const doc = await BookModel.findById(id).lean<BookDoc>();
 
-    return doc ? toBook(doc) : undefined;
+    return doc ? toBook(doc) : null;
   },
 
   async countByStatus(): Promise<{ total: number; active: number; inactive: number }> {
@@ -30,20 +30,16 @@ export const booksRepository = {
     return { total, active, inactive: total - active };
   },
 
-  async countByCategoryId(categoryId: string): Promise<number> {
-    return BookModel.countDocuments({ categoryId, isActive: true });
-  },
-
   async create(data: Omit<Book, 'id' | 'createdAt' | 'updatedAt'>): Promise<Book> {
     const doc = await BookModel.create(data);
 
     return toBook(doc.toObject() as unknown as BookDoc);
   },
 
-  async update(id: string, data: Partial<Omit<Book, 'id' | 'createdAt'>>): Promise<Book | undefined> {
+  async update(id: string, data: Partial<Omit<Book, 'id' | 'createdAt'>>): Promise<Book | null> {
     const doc = await BookModel.findByIdAndUpdate(id, data, { new: true }).lean<BookDoc>();
 
-    return doc ? toBook(doc) : undefined;
+    return doc ? toBook(doc) : null;
   },
 
   async delete(id: string): Promise<boolean> {

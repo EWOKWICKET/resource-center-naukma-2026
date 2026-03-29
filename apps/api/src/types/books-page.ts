@@ -1,5 +1,7 @@
+import { Genre } from '../enums/genre.enum';
+
 export interface BookFilters {
   search?: string;
-  categoryId?: string;
+  genre?: Genre;
   isActive?: boolean;
 }

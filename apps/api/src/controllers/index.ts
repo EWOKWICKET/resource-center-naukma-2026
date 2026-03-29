@@ -1,3 +1,4 @@
+export * from './auth.controller';
 export * from './books.controller';
-export * from './categories.controller';
 export * from './sse.controller';
+export * from './users.controller';

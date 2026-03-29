@@ -1,6 +1,5 @@
 import { booksService } from '../../services/books.service';
-import { categoriesService } from '../../services/categories.service';
-import { Book, BookFilters } from '../../types';
+import { BookFilters } from '../../types';
 
 export const booksResolver = {
   Query: {
@@ -10,14 +9,6 @@ export const booksResolver = {
 
     book: (_: unknown, { id }: { id: string }) => {
       return booksService.findById(id);
-    },
-  },
-
-  Book: {
-    category: (book: Book) => {
-      if (!book.categoryId) return null;
-
-      return categoriesService.findById(book.categoryId);
     },
   },
 };
