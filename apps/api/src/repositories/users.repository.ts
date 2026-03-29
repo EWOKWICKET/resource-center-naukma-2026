@@ -24,7 +24,15 @@ export const usersRepository = {
     return { ...toUser(doc), passwordHash: doc.passwordHash };
   },
 
-  async create(data: { email: string; passwordHash: string; firstName: string; lastName: string; role: UserRole }): Promise<User> {
+  async create(data: {
+    email: string;
+    passwordHash: string;
+    firstName: string;
+    lastName: string;
+    role: UserRole;
+    isVerified: boolean;
+    expiresAt: Date;
+  }): Promise<User> {
     const doc = await UserModel.create(data);
 
     return toUser(doc.toObject() as unknown as UserDoc);
@@ -34,5 +42,11 @@ export const usersRepository = {
     const doc = await UserModel.findByIdAndUpdate(id, data, { new: true }).lean<UserDoc>();
 
     return doc ? toUser(doc) : null;
+  },
+
+  async verifyUser(id: string): Promise<boolean> {
+    const result = await UserModel.updateOne({ _id: id, isVerified: false }, { $set: { isVerified: true }, $unset: { expiresAt: '' } });
+
+    return result.modifiedCount > 0;
   },
 };

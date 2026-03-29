@@ -12,5 +12,10 @@ export const loginSchema = z.object({
   password: z.string().min(1),
 });
 
+export const sendVerificationEmailSchema = z.object({
+  email: z.email().transform((v) => v.toLowerCase().trim()),
+});
+
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
+export type SendVerificationEmailInput = z.infer<typeof sendVerificationEmailSchema>;

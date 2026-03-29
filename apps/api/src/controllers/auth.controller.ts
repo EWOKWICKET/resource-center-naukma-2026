@@ -1,7 +1,8 @@
 import { FastifyInstance } from 'fastify';
 import { ZodTypeProvider } from 'fastify-type-provider-zod';
+import { z } from 'zod';
 import { authService } from '../services/auth.service';
-import { loginSchema, registerSchema } from '../schemas/auth.schema';
+import { loginSchema, registerSchema, sendVerificationEmailSchema } from '../schemas/auth.schema';
 import { requireRole } from '../guards/require-role';
 import { UserRole } from '../enums/user-role.enum';
 
@@ -16,8 +17,7 @@ export async function authController(app: FastifyInstance): Promise<void> {
   const router = app.withTypeProvider<ZodTypeProvider>();
 
   router.post('/register', { schema: { body: registerSchema } }, async (req, reply) => {
-    const { user, sessionId } = await authService.register(req.body);
-    reply.setCookie('sid', sessionId, COOKIE_OPTS);
+    const user = await authService.register(req.body);
 
     return reply.status(201).send(user);
   });
@@ -35,6 +35,19 @@ export async function authController(app: FastifyInstance): Promise<void> {
     reply.clearCookie('sid', { path: '/' });
 
     return reply.status(204).send();
+  });
+
+  router.post('/send-verification-email', { schema: { body: sendVerificationEmailSchema } }, async (req, reply) => {
+    await authService.sendVerificationEmail(req.body.email);
+
+    return reply.status(200).send();
+  });
+
+  // TODO: replace userId with a one-time opaque token to hide user identity
+  router.get('/verify/:userId', { schema: { params: z.object({ userId: z.string() }) } }, async (req, reply) => {
+    await authService.verifyUser(req.params.userId);
+
+    return reply.status(200).send();
   });
 
   router.get('/me', { preHandler: [requireRole(UserRole.User, UserRole.Admin)] }, async (req) => {
