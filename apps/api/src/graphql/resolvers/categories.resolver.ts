@@ -3,11 +3,11 @@ import { booksRepository } from '../../repositories/books.repository';
 
 export const categoriesResolver = {
   Query: {
-    categoriesWithStats: () => {
-      return categoriesService.findAll().map((category) => ({
-        ...category,
-        activeBookCount: booksRepository.countByCategoryId(category.id),
-      }));
+    categoriesWithStats: async () => {
+      const categories = await categoriesService.findAll();
+      const counts = await Promise.all(categories.map((c) => booksRepository.countByCategoryId(c.id)));
+
+      return categories.map((category, i) => ({ ...category, activeBookCount: counts[i] }));
     },
   },
 };

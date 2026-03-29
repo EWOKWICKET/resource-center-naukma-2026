@@ -1,54 +1,41 @@
-import { randomUUID } from 'crypto';
+import { CategoryModel } from '../models/category.model';
+import { CategoryDoc, toCategory } from '../mappers/category.mapper';
 import { Category } from '../types';
 
-// ---------------------------------------------------------------------------
-// In-memory mock repository — replace with Mongoose calls when DB is wired up
-// ---------------------------------------------------------------------------
-
-const store: Category[] = [
-  { id: '1', name: 'Fiction', description: 'Novels and fictional literature', isActive: true },
-  { id: '2', name: 'Science', description: 'Natural and applied sciences', isActive: true },
-  { id: '3', name: 'History', description: 'Historical accounts and biographies', isActive: true },
-  { id: '4', name: 'Philosophy', description: 'Philosophy and ethics', isActive: false },
-];
-
 export const categoriesRepository = {
-  findAll(): Category[] {
-    return store.map((c) => ({ ...c }));
+  async findAll(): Promise<Category[]> {
+    const docs = await CategoryModel.find().lean<CategoryDoc[]>();
+
+    return docs.map(toCategory);
   },
 
-  findById(id: string): Category | undefined {
-    const found = store.find((c) => c.id === id);
+  async findById(id: string): Promise<Category | undefined> {
+    const doc = await CategoryModel.findById(id).lean<CategoryDoc>();
 
-    return found ? { ...found } : undefined;
+    return doc ? toCategory(doc) : undefined;
   },
 
-  findByName(name: string): Category | undefined {
-    const found = store.find((c) => c.name.toLowerCase() === name.toLowerCase());
+  async findByName(name: string): Promise<Category | undefined> {
+    const doc = await CategoryModel.findOne({ name: new RegExp(`^${name}$`, 'i') }).lean<CategoryDoc>();
 
-    return found ? { ...found } : undefined;
+    return doc ? toCategory(doc) : undefined;
   },
 
-  create(data: Omit<Category, 'id'>): Category {
-    const category: Category = { id: randomUUID(), ...data };
-    store.push(category);
+  async create(data: Omit<Category, 'id'>): Promise<Category> {
+    const doc = await CategoryModel.create(data);
 
-    return { ...category };
+    return toCategory(doc.toObject() as CategoryDoc);
   },
 
-  update(id: string, data: Partial<Omit<Category, 'id'>>): Category | undefined {
-    const index = store.findIndex((c) => c.id === id);
-    if (index === -1) return undefined;
-    store[index] = { ...store[index], ...data };
+  async update(id: string, data: Partial<Omit<Category, 'id'>>): Promise<Category | undefined> {
+    const doc = await CategoryModel.findByIdAndUpdate(id, data, { new: true }).lean<CategoryDoc>();
 
-    return { ...store[index] };
+    return doc ? toCategory(doc) : undefined;
   },
 
-  delete(id: string): boolean {
-    const index = store.findIndex((c) => c.id === id);
-    if (index === -1) return false;
-    store.splice(index, 1);
+  async delete(id: string): Promise<boolean> {
+    const result = await CategoryModel.findByIdAndDelete(id);
 
-    return true;
+    return result !== null;
   },
 };

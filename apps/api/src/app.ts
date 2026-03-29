@@ -2,6 +2,7 @@ import { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import mercurius from 'mercurius';
+import { db } from './plugins/db';
 import { booksController, categoriesController, sseController } from './controllers';
 import { schema, booksResolver, categoriesResolver, statsResolver } from './graphql';
 
@@ -16,6 +17,7 @@ const resolvers = {
 
 export const buildApp = async (app: FastifyInstance): Promise<void> => {
   await app.register(cors, { origin: true, credentials: true });
+  await app.register(db);
 
   // GraphQL — registered before the Zod validator compiler so mercurius's own
   // JSON-Schema body validation is unaffected by Zod
@@ -41,8 +43,6 @@ export const buildApp = async (app: FastifyInstance): Promise<void> => {
     },
     { prefix: '/api' },
   );
-
-  app.get('/health', async () => ({ status: 'ok' }));
 
   app.setErrorHandler((error, _req, reply) => {
     const err = error as { statusCode?: number; message?: string };

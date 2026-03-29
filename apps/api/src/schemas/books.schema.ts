@@ -18,8 +18,6 @@ export const booksQuerySchema = z.object({
     .enum(['true', 'false'])
     .transform((v) => v === 'true')
     .optional(),
-  page: z.coerce.number().int().positive().default(1),
-  limit: z.coerce.number().int().positive().max(100).default(10),
 });
 
 export const bookStatusSchema = z.object({
