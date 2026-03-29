@@ -6,8 +6,7 @@
   "scripts": {
     "lint": "eslint \"apps/*/src/**/*.ts\"",
     "format": "prettier --write \"apps/*/src/**/*.ts\"",
-    "build": "npm run build -ws --if-present",
-    "test": "npm run test -ws --if-present"
+    "build": "npm run build -ws --if-present"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

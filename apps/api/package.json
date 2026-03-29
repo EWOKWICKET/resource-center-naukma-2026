@@ -4,9 +4,7 @@
   "scripts": {
     "start:dev": "nodemon src/server.ts",
     "build": "tsc -p tsconfig.json",
-    "lint": "eslint src/**/*.ts",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "lint": "eslint src/**/*.ts"
   },
   "dependencies": {
     "@fastify/cookie": "^11.0.2",
@@ -25,7 +23,6 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.0.0",
     "nodemon": "^3.0.0",
-    "ts-node": "^10.9.2",
-    "vitest": "^3.0.0"
+    "ts-node": "^10.9.2"
   }
 }
