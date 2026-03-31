@@ -12,6 +12,7 @@ http.interceptors.response.use(
       const { default: router } = await import('@/router');
       router.push('/login');
     }
+
     return Promise.reject(error);
   },
 );

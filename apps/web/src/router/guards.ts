@@ -1,11 +1,7 @@
 import type { NavigationGuardNext, RouteLocationNormalized } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 
-export function requireAuth(
-  _to: RouteLocationNormalized,
-  _from: RouteLocationNormalized,
-  next: NavigationGuardNext,
-): void {
+export function requireAuth(_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): void {
   const authStore = useAuthStore();
   if (!authStore.isLoggedIn) {
     next('/login');
@@ -14,11 +10,7 @@ export function requireAuth(
   }
 }
 
-export function requireAdmin(
-  _to: RouteLocationNormalized,
-  _from: RouteLocationNormalized,
-  next: NavigationGuardNext,
-): void {
+export function requireAdmin(_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): void {
   const authStore = useAuthStore();
   if (!authStore.isAdmin) {
     next('/');
@@ -27,11 +19,7 @@ export function requireAdmin(
   }
 }
 
-export function guestOnly(
-  _to: RouteLocationNormalized,
-  _from: RouteLocationNormalized,
-  next: NavigationGuardNext,
-): void {
+export function guestOnly(_to: RouteLocationNormalized, _from: RouteLocationNormalized, next: NavigationGuardNext): void {
   const authStore = useAuthStore();
   if (authStore.isLoggedIn) {
     next('/');
