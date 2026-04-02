@@ -26,8 +26,20 @@ type AdminStats {
   inactiveBooks: Int!
 }
 
+type UserBook {
+  id: ID!
+  userId: ID!
+  bookId: ID!
+  addedAt: String!
+}
+
 type Query {
   books(search: String, genre: String, isActive: Boolean): [Book!]!
   book(id: ID!): Book
   adminStats: AdminStats!
+}
+
+type Mutation {
+  addToLibrary(bookId: ID!): UserBook
+  removeFromLibrary(bookId: ID!): Boolean!
 }

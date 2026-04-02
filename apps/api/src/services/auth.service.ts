@@ -26,11 +26,13 @@ export const authService = {
     });
 
     const link = `${process.env.BACKEND_URL}/auth/verify/${user.id}`;
-    await mailService.sendMail(
-      user.email,
-      'Verify your email',
-      `<p>Click the link below to verify your email address. The link expires in 24 hours.</p><p><a href="${link}">${link}</a></p>`,
-    );
+    mailService
+      .sendMail(
+        user.email,
+        'Verify your email',
+        `<p>Click the link below to verify your email address. The link expires in 24 hours.</p><p><a href="${link}">${link}</a></p>`,
+      )
+      .catch((err) => console.error('[mail] Failed to send verification email:', err));
 
     return user;
   },
