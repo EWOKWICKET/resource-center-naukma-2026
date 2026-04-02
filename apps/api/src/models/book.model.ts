@@ -29,6 +29,6 @@ const bookSchema = new Schema<BookModel>(
   { timestamps: true },
 );
 
-bookSchema.index({ title: 'text', authors: 'text' });
+bookSchema.index({ title: 'text', authors: 'text' }, { language_override: 'lang_unused' });
 
 export const BookModel = mongoose.model<BookModel>('Book', bookSchema);

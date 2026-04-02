@@ -32,22 +32,18 @@ export const useBooksStore = defineStore('books', () => {
 
   async function createBook(dto: BookInput): Promise<void> {
     await booksApi.create(dto);
-    // SSE will update items reactively via onBookCreated
   }
 
   async function updateBook(id: string, dto: BookInput): Promise<void> {
     await booksApi.update(id, dto);
-    // SSE will update items reactively via onBookUpdated
   }
 
   async function deleteBook(id: string): Promise<void> {
     await booksApi.remove(id);
-    // SSE will update items reactively via onBookDeleted
   }
 
   async function setBookStatus(id: string, isActive: boolean): Promise<void> {
     await booksApi.setStatus(id, isActive);
-    // SSE will update items reactively via onBookStatusChanged
   }
 
   function onBookCreated(book: Book): void {

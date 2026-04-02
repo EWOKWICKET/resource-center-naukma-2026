@@ -16,7 +16,6 @@ export const usersRepository = {
     return doc ? toUser(doc) : null;
   },
 
-  // Returns mapped User with passwordHash — used only by auth service
   async findByEmailWithPasswordHash(email: string): Promise<(User & { passwordHash: string }) | null> {
     const doc = await UserModel.findOne({ email }).lean<UserDoc>();
     if (!doc) return null;
