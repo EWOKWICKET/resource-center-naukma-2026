@@ -41,11 +41,6 @@ const router = createRouter({
       component: () => import('@/pages/admin/AdminBooksPage.vue'),
       beforeEnter: requireAdmin,
     },
-    {
-      path: '/admin/categories',
-      component: () => import('@/pages/admin/AdminCategoriesPage.vue'),
-      beforeEnter: requireAdmin,
-    },
   ],
 });
 

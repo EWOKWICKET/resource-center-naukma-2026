@@ -20,33 +20,10 @@ type Book {
   updatedAt: String!
 }
 
-type Category {
-  id: ID!
-  name: String!
-  description: String
-  isActive: Boolean!
-}
-
-type CategoryWithStats {
-  id: ID!
-  name: String!
-  description: String
-  isActive: Boolean!
-  activeBookCount: Int!
-}
-
-type CategoryBookCount {
-  categoryId: ID!
-  categoryName: String!
-  count: Int!
-}
-
 type AdminStats {
   totalBooks: Int!
   activeBooks: Int!
   inactiveBooks: Int!
-  totalCategories: Int!
-  booksByCategory: [CategoryBookCount!]!
 }
 
 type UserBook {
@@ -59,7 +36,6 @@ type Query {
   books(search: String, categoryId: ID, isActive: Boolean): [Book!]!
   book(id: ID!): Book
   myLibrary: [Book!]!
-  categoriesWithStats: [CategoryWithStats!]!
   adminStats: AdminStats!
 }
 
