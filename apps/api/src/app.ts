@@ -1,6 +1,7 @@
 import { FastifyInstance } from 'fastify';
 import cors from '@fastify/cors';
 import cookie from '@fastify/cookie';
+import rateLimit from '@fastify/rate-limit';
 import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import mercurius from 'mercurius';
 import { db } from './plugins/db';
@@ -20,6 +21,7 @@ const resolvers = {
 
 export const buildApp = async (app: FastifyInstance): Promise<void> => {
   await app.register(cors, { origin: true, credentials: true });
+  await app.register(rateLimit, { global: false });
   await app.register(db);
   await app.register(cookie);
   await app.register(sessionPlugin);

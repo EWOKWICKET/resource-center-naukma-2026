@@ -16,13 +16,13 @@ const COOKIE_OPTS = {
 export async function authController(app: FastifyInstance): Promise<void> {
   const router = app.withTypeProvider<ZodTypeProvider>();
 
-  router.post('/register', { schema: { body: registerSchema } }, async (req, reply) => {
+  router.post('/register', { config: { rateLimit: { max: 5, timeWindow: '1 minute' } }, schema: { body: registerSchema } }, async (req, reply) => {
     const user = await authService.register(req.body);
 
     return reply.status(201).send(user);
   });
 
-  router.post('/login', { schema: { body: loginSchema } }, async (req, reply) => {
+  router.post('/login', { config: { rateLimit: { max: 10, timeWindow: '1 minute' } }, schema: { body: loginSchema } }, async (req, reply) => {
     const { user, sessionId } = await authService.login(req.body);
     reply.setCookie('sid', sessionId, COOKIE_OPTS);
 
@@ -37,7 +37,7 @@ export async function authController(app: FastifyInstance): Promise<void> {
     return reply.status(204).send();
   });
 
-  router.post('/send-verification-email', { schema: { body: sendVerificationEmailSchema } }, async (req, reply) => {
+  router.post('/send-verification-email', { config: { rateLimit: { max: 3, timeWindow: '5 minutes' } }, schema: { body: sendVerificationEmailSchema } }, async (req, reply) => {
     await authService.sendVerificationEmail(req.body.email);
 
     return reply.status(200).send();

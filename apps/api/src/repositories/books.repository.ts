@@ -9,7 +9,8 @@ export const booksRepository = {
     if (filters.isActive !== undefined) query.isActive = filters.isActive;
     if (filters.genre) query.genres = filters.genre;
     if (filters.search) {
-      const regex = new RegExp(filters.search, 'i');
+      const escaped = filters.search.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const regex = new RegExp(escaped, 'i');
       query.$or = [{ title: regex }, { authors: regex }];
     }
 
