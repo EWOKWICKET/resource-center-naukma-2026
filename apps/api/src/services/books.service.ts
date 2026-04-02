@@ -7,9 +7,7 @@ import { sseService } from './sse.service';
 
 export const booksService = {
   async findAll(filters: BookFilters = {}): Promise<Book[]> {
-    const resolved: BookFilters = { isActive: true, ...filters };
-
-    return booksRepository.findAll(resolved);
+    return booksRepository.findAll(filters);
   },
 
   async findById(id: string): Promise<Book> {

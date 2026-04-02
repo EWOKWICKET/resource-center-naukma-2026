@@ -5,7 +5,17 @@ export const statsResolver = {
     adminStats: async () => {
       const { total, active, inactive } = await booksRepository.countByStatus();
 
-      return { totalBooks: total, activeBooks: active, inactiveBooks: inactive };
+      return {
+        totalBooks: total,
+        activeBooks: active,
+        inactiveBooks: inactive,
+        totalCategories: 0,
+        booksByCategory: [],
+      };
+    },
+
+    categoriesWithStats: async () => {
+      return [];
     },
   },
 };

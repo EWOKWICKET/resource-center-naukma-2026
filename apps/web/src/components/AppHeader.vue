@@ -73,9 +73,12 @@ const userFullName = computed(() => {
           </template>
 
           <template v-if="authStore.isLoggedIn">
-            <span :class="['text-sm', isAdminRoute ? 'text-gray-300' : 'text-gray-600']">
+            <RouterLink
+              to="/account"
+              :class="['text-sm transition-colors', isAdminRoute ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-brand-600']"
+            >
               {{ userFullName }}
-            </span>
+            </RouterLink>
             <button
               @click="handleLogout"
               :class="[
@@ -143,9 +146,13 @@ const userFullName = computed(() => {
         </template>
 
         <template v-if="authStore.isLoggedIn">
-          <span :class="['text-sm', isAdminRoute ? 'text-gray-300' : 'text-gray-600']">
+          <RouterLink
+            to="/account"
+            :class="['text-sm transition-colors', isAdminRoute ? 'text-gray-300 hover:text-white' : 'text-gray-600 hover:text-brand-600']"
+            @click="mobileMenuOpen = false"
+          >
             {{ userFullName }}
-          </span>
+          </RouterLink>
           <button
             @click="handleLogout"
             :class="['text-sm font-medium text-left transition-colors', linkClass]"

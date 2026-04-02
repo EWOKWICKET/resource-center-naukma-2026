@@ -44,6 +44,8 @@ export const useAuthStore = defineStore('auth', () => {
     } finally {
       user.value = null;
       loading.value = false;
+      const { useLibraryStore } = await import('@/stores/library.store');
+      useLibraryStore().reset();
       const { default: router } = await import('@/router');
       await router.push('/login');
     }

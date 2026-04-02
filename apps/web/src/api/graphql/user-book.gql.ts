@@ -1,3 +1,23 @@
+export const GET_MY_LIBRARY = `
+  query GetMyLibrary {
+    myLibrary {
+      id
+      title
+      authors
+      genres
+      description
+      isbn
+      publishedYear
+      publisher
+      language
+      pageCount
+      isActive
+      createdAt
+      updatedAt
+    }
+  }
+`;
+
 export const ADD_TO_LIBRARY = `
   mutation AddToLibrary($bookId: ID!) {
     addToLibrary(bookId: $bookId) {

@@ -20,10 +20,26 @@ type Book {
   updatedAt: String!
 }
 
+type CategoryWithStats {
+  id: ID!
+  name: String!
+  description: String
+  isActive: Boolean!
+  activeBookCount: Int!
+}
+
+type CategoryBookCount {
+  categoryId: ID!
+  categoryName: String!
+  count: Int!
+}
+
 type AdminStats {
   totalBooks: Int!
   activeBooks: Int!
   inactiveBooks: Int!
+  totalCategories: Int!
+  booksByCategory: [CategoryBookCount!]!
 }
 
 type UserBook {
@@ -36,7 +52,9 @@ type UserBook {
 type Query {
   books(search: String, genre: String, isActive: Boolean): [Book!]!
   book(id: ID!): Book
+  myLibrary: [Book!]!
   adminStats: AdminStats!
+  categoriesWithStats: [CategoryWithStats!]!
 }
 
 type Mutation {

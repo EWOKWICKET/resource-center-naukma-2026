@@ -146,7 +146,8 @@ const deleteTarget = ref<Book | null>(null)
 const deleting = ref(false)
 
 onMounted(() => {
-  booksStore.fetchBooks({})
+  // undefined clears any accumulated isActive filter so admin sees all books
+  booksStore.fetchBooks({ isActive: undefined })
 })
 
 function openCreate() {

@@ -38,6 +38,17 @@
         >
           Inactive
         </span>
+        <button
+          v-if="authStore.isLoggedIn"
+          :disabled="saving"
+          @click="toggleSaved"
+          class="inline-flex items-center gap-1.5 rounded-full px-4 py-1.5 text-sm font-medium transition-colors disabled:opacity-50"
+          :class="libraryStore.isSaved(book.id)
+            ? 'bg-blue-600 text-white hover:bg-red-600'
+            : 'border border-blue-600 text-blue-600 hover:bg-blue-50'"
+        >
+          {{ libraryStore.isSaved(book.id) ? 'Remove from Library' : 'Save to Library' }}
+        </button>
       </div>
 
       <!-- Authors -->
@@ -90,17 +101,22 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { ChevronLeftIcon } from '@heroicons/vue/24/outline'
 import { useBooksStore } from '@/stores/books.store'
 import { useAuthStore } from '@/stores/auth.store'
+import { useLibraryStore } from '@/stores/library.store'
 import type { Genre } from '@/types'
 
 const route = useRoute()
 const router = useRouter()
 const booksStore = useBooksStore()
-const { isAdmin } = useAuthStore()
+const authStore = useAuthStore()
+const libraryStore = useLibraryStore()
+const { isAdmin } = authStore
+
+const saving = ref(false)
 
 const book = computed(() => booksStore.selected)
 
@@ -112,6 +128,29 @@ function genreLabel(genre: Genre): string {
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(' ')
 }
+
+async function toggleSaved(): Promise<void> {
+  if (!book.value) return
+  saving.value = true
+  try {
+    if (libraryStore.isSaved(book.value.id)) {
+      await libraryStore.removeBook(book.value.id)
+    } else {
+      await libraryStore.addBook(book.value.id)
+    }
+  } finally {
+    saving.value = false
+  }
+}
+
+// Load library once auth state is confirmed (fetchMe in App.vue completes after mount)
+watch(
+  () => authStore.isLoggedIn,
+  (loggedIn) => {
+    if (loggedIn) libraryStore.fetchLibrary()
+  },
+  { immediate: true },
+)
 
 onMounted(() => {
   const id = route.params.id as string

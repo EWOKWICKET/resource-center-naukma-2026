@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { requireAdmin, guestOnly } from './guards';
+import { requireAdmin, requireAuth, guestOnly } from './guards';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -25,6 +25,11 @@ const router = createRouter({
     {
       path: '/verify/:userId',
       component: () => import('@/pages/VerifyEmailPage.vue'),
+    },
+    {
+      path: '/account',
+      component: () => import('@/pages/AccountPage.vue'),
+      beforeEnter: requireAuth,
     },
     {
       path: '/admin',

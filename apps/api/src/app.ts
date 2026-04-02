@@ -13,6 +13,7 @@ const resolvers = {
   Query: {
     ...booksResolver.Query,
     ...statsResolver.Query,
+    ...userBookResolver.Query,
   },
   Mutation: {
     ...userBookResolver.Mutation,

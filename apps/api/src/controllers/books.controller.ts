@@ -4,12 +4,16 @@ import { booksService } from '../services/books.service';
 import { bookInputSchema, bookParamsSchema, booksQuerySchema, bookStatusSchema } from '../schemas/books.schema';
 import { requireRole } from '../guards/require-role';
 import { UserRole } from '../enums/user-role.enum';
+import type { BookFilters } from '../types';
 
 export async function booksController(app: FastifyInstance): Promise<void> {
   const router = app.withTypeProvider<ZodTypeProvider>();
 
   router.get('/', { schema: { querystring: booksQuerySchema } }, async (req) => {
-    return booksService.findAll(req.query);
+    const isAdmin = req.user?.role === UserRole.Admin;
+    const filters: BookFilters = isAdmin ? req.query : { ...req.query, isActive: true };
+
+    return booksService.findAll(filters);
   });
 
   router.get('/:id', { schema: { params: bookParamsSchema } }, async (req) => {

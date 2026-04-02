@@ -25,6 +25,13 @@ export const booksRepository = {
     return doc ? toBook(doc) : null;
   },
 
+  async findByIds(ids: string[]): Promise<Book[]> {
+    if (!ids.length) return [];
+    const docs = await BookModel.find({ _id: { $in: ids } }).lean<BookDoc[]>();
+
+    return docs.map(toBook);
+  },
+
   async countByStatus(): Promise<{ total: number; active: number; inactive: number }> {
     const [total, active] = await Promise.all([BookModel.countDocuments(), BookModel.countDocuments({ isActive: true })]);
 

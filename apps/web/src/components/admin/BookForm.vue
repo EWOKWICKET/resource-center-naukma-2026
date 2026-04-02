@@ -231,7 +231,8 @@ const schema = toTypedSchema(
       .max(2200)
       .optional()
       .or(z.literal(''))
-      .transform((v) => (v === '' ? undefined : Number(v))),
+      .or(z.null())
+      .transform((v) => (v === '' || v === null) ? undefined : Number(v)),
     publisher: z.string().optional(),
     language: z
       .nativeEnum(Language)
@@ -244,7 +245,8 @@ const schema = toTypedSchema(
       .positive()
       .optional()
       .or(z.literal(''))
-      .transform((v) => (v === '' ? undefined : Number(v))),
+      .or(z.null())
+      .transform((v) => (v === '' || v === null) ? undefined : Number(v)),
   }),
 )
 

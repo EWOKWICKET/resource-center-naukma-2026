@@ -7,12 +7,14 @@ All CRUD operations live in the REST API.
 type Book {
   id: ID!
   title: String!
-  author: String!
+  authors: [String!]!
+  genres: [String!]!
   description: String
   isbn: String
-  coverUrl: String
-  category: Category
   publishedYear: Int
+  publisher: String
+  language: String
+  pageCount: Int
   isActive: Boolean!
   createdAt: String!
   updatedAt: String!
@@ -56,6 +58,7 @@ type UserBook {
 type Query {
   books(search: String, categoryId: ID, isActive: Boolean): [Book!]!
   book(id: ID!): Book
+  myLibrary: [Book!]!
   categoriesWithStats: [CategoryWithStats!]!
   adminStats: AdminStats!
 }

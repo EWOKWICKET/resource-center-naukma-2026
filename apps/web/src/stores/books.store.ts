@@ -43,7 +43,8 @@ export const useBooksStore = defineStore('books', () => {
   }
 
   async function setBookStatus(id: string, isActive: boolean): Promise<void> {
-    await booksApi.setStatus(id, isActive);
+    const book = await booksApi.setStatus(id, isActive);
+    onBookUpdated(book);
   }
 
   function onBookCreated(book: Book): void {

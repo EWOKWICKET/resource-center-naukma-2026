@@ -1,3 +1,6 @@
 import { GraphQLClient } from 'graphql-request';
 
-export const gqlClient = new GraphQLClient(import.meta.env.VITE_GRAPHQL_URL ?? '/graphql', { credentials: 'include' });
+export const gqlClient = new GraphQLClient(
+  import.meta.env.VITE_GRAPHQL_URL ?? `${location.origin}/graphql`,
+  { credentials: 'include' },
+);
