@@ -6,12 +6,15 @@ import mercurius from 'mercurius';
 import { db } from './plugins/db';
 import { sessionPlugin } from './plugins/session';
 import { authController, booksController, sseController, usersController } from './controllers';
-import { schema, booksResolver, statsResolver } from './graphql';
+import { schema, booksResolver, statsResolver, userBookResolver } from './graphql';
 
 const resolvers = {
   Query: {
     ...booksResolver.Query,
     ...statsResolver.Query,
+  },
+  Mutation: {
+    ...userBookResolver.Mutation,
   },
 };
 
@@ -27,6 +30,7 @@ export const buildApp = async (app: FastifyInstance): Promise<void> => {
     schema,
     resolvers,
     graphiql: true,
+    context: (req) => ({ user: req.user }),
   });
 
   // SSE — no body validation needed
