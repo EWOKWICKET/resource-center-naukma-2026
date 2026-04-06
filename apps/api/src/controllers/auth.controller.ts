@@ -58,6 +58,7 @@ export async function authController(app: FastifyInstance): Promise<void> {
   // TODO: replace userId with a one-time opaque token to hide user identity
   router.get('/verify/:userId', { schema: { params: z.object({ userId: z.string() }) } }, async (req, reply) => {
     await authService.verifyUser(req.params.userId);
+    console.log('User verified');
 
     return reply.status(200).send();
   });

@@ -25,7 +25,7 @@ export const authService = {
       expiresAt: new Date(Date.now() + VERIFICATION_TTL_MS),
     });
 
-    const link = `${process.env.BACKEND_URL}/auth/verify/${user.id}`;
+    const link = `${process.env.FRONTEND_URL}/verify/${user.id}`;
     mailService
       .sendMail(
         user.email,
@@ -61,7 +61,7 @@ export const authService = {
     if (!user) throw { statusCode: 404, message: 'User not found' };
     if (user.isVerified) throw { statusCode: 400, message: 'Already verified' };
 
-    const link = `${process.env.BACKEND_URL}/auth/verify/${user.id}`;
+    const link = `${process.env.FRONTEND_URL}/verify/${user.id}`;
     await mailService.sendMail(
       email,
       'Verify your email',
